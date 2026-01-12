@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Casino Games</title>
+    <title>Lucky Jet</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * {
@@ -15,780 +15,785 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #1a1d2e;
             color: white;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* Главное меню */
-        #menu {
+        .game-container {
+            width: 100vw;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            padding-top: 50px;
+            background: linear-gradient(180deg, #1e1442 0%, #0f0825 100%);
         }
 
-        .menu-title {
-            text-align: center;
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .game-card {
-            background: rgba(255,255,255,0.1);
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(26, 29, 46, 0.9);
             backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid rgba(255,255,255,0.2);
+            border-bottom: 1px solid rgba(124, 58, 237, 0.1);
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #7c3aed, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 3px;
+        }
+
+        .header-controls {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 15px;
         }
 
-        .game-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255,255,255,0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-
-        .game-icon {
-            font-size: 48px;
-            width: 70px;
-            height: 70px;
+        .sound-btn {
+            width: 35px;
+            height: 35px;
+            background: rgba(124, 58, 237, 0.15);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(255,255,255,0.1);
-            border-radius: 15px;
+            cursor: pointer;
+            font-size: 16px;
         }
 
-        .game-info {
+        .balance {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(124, 58, 237, 0.15);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+        }
+
+        .game-area {
+            flex: 1;
+            display: flex;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .players-sidebar {
+            width: 260px;
+            background: rgba(26, 29, 46, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            overflow-y: auto;
+            border-right: 1px solid rgba(124, 58, 237, 0.15);
+        }
+
+        .players-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 8px;
+            background: rgba(30, 20, 66, 0.5);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+
+        .tab.active {
+            background: rgba(124, 58, 237, 0.2);
+            border-color: #7c3aed;
+            color: white;
+        }
+
+        .round-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(30, 20, 66, 0.4);
+            border-radius: 8px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        .total-bets {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .player-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(30, 20, 66, 0.4);
+            border: 1px solid rgba(124, 58, 237, 0.15);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .player-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .player-info {
             flex: 1;
         }
 
-        .game-name {
-            font-size: 22px;
+        .player-name {
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .player-bet {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .player-multiplier {
             font-weight: bold;
-            margin-bottom: 5px;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
         }
 
-        .game-desc {
-            font-size: 14px;
-            opacity: 0.8;
+        .player-multiplier.win {
+            background: rgba(34, 197, 94, 0.2);
+            color: #22c55e;
         }
 
-        /* Общие стили для игр */
-        .game-screen {
-            display: none;
+        .player-multiplier.current {
+            background: rgba(124, 58, 237, 0.2);
+            color: #a78bfa;
         }
 
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-        }
-
-        .back-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-
-        .back-btn:hover {
-            background: rgba(255,255,255,0.3);
-        }
-
-        .signal-btn {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            border: none;
-            color: white;
-            padding: 15px 40px;
-            border-radius: 15px;
-            cursor: pointer;
-            font-size: 18px;
-            font-weight: bold;
-            margin: 20px auto;
-            display: block;
-            transition: all 0.3s;
-            box-shadow: 0 5px 15px rgba(245,87,108,0.4);
-        }
-
-        .signal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(245,87,108,0.6);
-        }
-
-        .signal-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        /* Mines Game */
-        #mines-game {
-            padding-top: 20px;
-        }
-
-        .mines-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            margin: 20px 0;
-            padding: 20px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-        }
-
-        .mine-cell {
-            aspect-ratio: 1;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .mine-cell:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
-        }
-
-        .mine-cell.safe {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            animation: pulse 0.5s;
-        }
-
-        .mine-cell.danger {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-            animation: shake 0.5s;
-        }
-
-        /* Tower Rush */
-        #tower-game {
-            padding-top: 20px;
-        }
-
-        .tower-container {
+        .game-canvas {
+            flex: 1;
             position: relative;
-            height: 600px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 20px;
-            overflow: hidden;
         }
 
-        .tower-level {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            justify-content: center;
-        }
-
-        .tower-block {
-            width: 80px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 14px;
-        }
-
-        .tower-block:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
-        }
-
-        .tower-block.safe {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            animation: pulse 0.5s;
-        }
-
-        .tower-block.danger {
-            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
-        }
-
-        /* Aviamasters */
-        #avia-game {
-            padding-top: 20px;
-        }
-
-        .avia-display {
-            background: rgba(0,0,0,0.3);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-            height: 300px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .avia-multiplier {
-            font-size: 72px;
-            font-weight: bold;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5);
-            margin-bottom: 10px;
-        }
-
-        .avia-plane {
-            font-size: 64px;
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            animation: fly 3s linear infinite;
-        }
-
-        .avia-status {
-            font-size: 18px;
-            opacity: 0.8;
-            margin-top: 20px;
-        }
-
-        /* Lucky Jet */
-        #jet-game {
-            padding-top: 20px;
-        }
-
-        .jet-display {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 20px;
-            padding: 40px;
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-            overflow: hidden;
-            height: 400px;
-        }
-
-        .jet-multiplier {
-            font-size: 96px;
-            font-weight: bold;
-            text-shadow: 0 0 30px rgba(255,255,255,0.8);
-            margin-top: 80px;
-        }
-
-        .jet-character {
-            font-size: 80px;
-            position: absolute;
-            bottom: 50px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: bounce 1s ease-in-out infinite;
-        }
-
-        .jet-trail {
+        .stars {
             position: absolute;
             width: 100%;
-            height: 3px;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5));
-            bottom: 90px;
-            left: 0;
+            height: 100%;
         }
 
-        /* Animations */
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
         }
 
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; }
+            50% { opacity: 0.8; }
         }
 
-        @keyframes fly {
-            0% {
-                left: -100px;
-                bottom: 20px;
-            }
-            100% {
-                left: calc(100% + 100px);
-                bottom: 80%;
-            }
+        .clouds {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 250px;
+            z-index: 2;
         }
 
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            50% {
-                transform: translateX(-50%) translateY(-20px);
-            }
+        .cloud {
+            position: absolute;
+            bottom: 0;
+            background: radial-gradient(ellipse at center, rgba(88, 72, 152, 0.4) 0%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(35px);
+            animation: float-cloud 25s infinite linear;
         }
 
-        .result-message {
-            text-align: center;
-            font-size: 20px;
+        .cloud:nth-child(1) {
+            width: 400px;
+            height: 150px;
+            left: -200px;
+            bottom: 20px;
+        }
+
+        .cloud:nth-child(2) {
+            width: 350px;
+            height: 120px;
+            left: 30%;
+            bottom: 40px;
+            animation-delay: 5s;
+        }
+
+        .cloud:nth-child(3) {
+            width: 450px;
+            height: 130px;
+            left: 60%;
+            bottom: 10px;
+            animation-delay: 10s;
+        }
+
+        @keyframes float-cloud {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(100vw); }
+        }
+
+        .multiplier-display {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 140px;
             font-weight: bold;
-            margin: 20px 0;
-            padding: 15px;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            min-height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #a78bfa;
+            text-shadow: 0 0 60px rgba(167, 139, 250, 1);
+            z-index: 10;
         }
 
-        .settings {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
+        .status-text {
+            position: absolute;
+            top: calc(40% + 100px);
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        .character {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            z-index: 5;
+            transition: all 0.2s;
+        }
+
+        .lucky-joe {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .flame {
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 80px;
+            background: linear-gradient(180deg, rgba(255, 165, 0, 0.9) 0%, rgba(255, 69, 0, 0.7) 50%, transparent 100%);
+            border-radius: 50% 50% 0 0;
+            filter: blur(8px);
+            animation: flame-flicker 0.1s infinite alternate;
+        }
+
+        @keyframes flame-flicker {
+            0% { transform: translateX(-50%) scaleY(1); }
+            100% { transform: translateX(-50%) scaleY(1.2); }
+        }
+
+        .graph-line {
+            position: absolute;
+            bottom: 120px;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            z-index: 3;
+        }
+
+        .line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #7c3aed, #a78bfa);
+            box-shadow: 0 0 25px rgba(124, 58, 237, 1);
+            transform-origin: left bottom;
+            border-radius: 3px;
+        }
+
+        .control-panel {
+            display: flex;
+            gap: 15px;
             padding: 20px;
-            margin: 20px 0;
+            background: rgba(26, 29, 46, 0.95);
+            border-top: 1px solid rgba(124, 58, 237, 0.15);
         }
 
-        .setting-item {
+        .bet-controls {
+            flex: 1;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 15px 0;
-        }
-
-        .setting-item label {
-            font-size: 16px;
-        }
-
-        .setting-item input, .setting-item select {
-            background: rgba(255,255,255,0.2);
-            border: 1px solid rgba(255,255,255,0.3);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .info-box {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
+            flex-direction: column;
+            gap: 12px;
+            background: rgba(30, 20, 66, 0.5);
             padding: 15px;
-            margin: 15px 0;
-            font-size: 14px;
-            line-height: 1.6;
+            border-radius: 12px;
         }
 
-        .timer {
+        .bet-header {
+            display: flex;
+            gap: 8px;
+        }
+
+        .bet-option {
+            flex: 1;
+            padding: 8px;
+            background: transparent;
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            color: rgba(255, 255, 255, 0.5);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .bet-option.active {
+            background: rgba(124, 58, 237, 0.25);
+            color: white;
+        }
+
+        .bet-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .bet-decrease, .bet-increase {
+            width: 42px;
+            height: 42px;
+            background: rgba(26, 29, 46, 0.8);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 22px;
+        }
+
+        .bet-input {
+            flex: 1;
+            height: 42px;
+            background: rgba(26, 29, 46, 0.9);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            color: white;
+            border-radius: 8px;
+            padding: 0 15px;
+            font-size: 16px;
             text-align: center;
-            font-size: 18px;
-            margin: 15px 0;
-            opacity: 0.8;
+        }
+
+        .quick-amounts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 6px;
+        }
+
+        .quick-amount {
+            padding: 8px;
+            background: rgba(26, 29, 46, 0.6);
+            border: 1px solid rgba(124, 58, 237, 0.2);
+            color: rgba(255, 255, 255, 0.6);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .action-btn {
+            width: 100%;
+            height: 55px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .bet-btn {
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            color: white;
+        }
+
+        .cashout-btn {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+
+        .multiplier-badges {
+            display: flex;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(26, 29, 46, 0.7);
+            overflow-x: auto;
+        }
+
+        .multiplier-badge {
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .badge-low {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+        }
+
+        .badge-medium {
+            background: rgba(251, 146, 60, 0.15);
+            color: #fb923c;
+        }
+
+        .badge-high {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+        }
+
+        .flew-away {
+            color: #ef4444 !important;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Главное меню -->
-        <div id="menu">
-            <div class="menu-title">🎮 Casino Games</div>
-            
-            <div class="game-card" onclick="showGame('mines')">
-                <div class="game-icon">💎</div>
-                <div class="game-info">
-                    <div class="game-name">Mines</div>
-                    <div class="game-desc">Найди безопасные клетки</div>
+    <div class="game-container">
+        <div class="header">
+            <div class="logo">LUCKYJET</div>
+            <div class="header-controls">
+                <div class="sound-btn" onclick="toggleSound()">
+                    <span id="sound-icon">🔊</span>
                 </div>
-            </div>
-
-            <div class="game-card" onclick="showGame('tower')">
-                <div class="game-icon">🏰</div>
-                <div class="game-info">
-                    <div class="game-name">Tower Rush</div>
-                    <div class="game-desc">Строй башню правильно</div>
-                </div>
-            </div>
-
-            <div class="game-card" onclick="showGame('avia')">
-                <div class="game-icon">✈️</div>
-                <div class="game-info">
-                    <div class="game-name">Aviamasters</div>
-                    <div class="game-desc">Поймай множитель</div>
-                </div>
-            </div>
-
-            <div class="game-card" onclick="showGame('jet')">
-                <div class="game-icon">🚀</div>
-                <div class="game-info">
-                    <div class="game-name">Lucky Jet</div>
-                    <div class="game-desc">Удача на высоте</div>
+                <div class="balance">
+                    <span>💰</span>
+                    <span id="balance">10,000.00 $</span>
                 </div>
             </div>
         </div>
 
-        <!-- Mines Game -->
-        <div id="mines-game" class="game-screen">
-            <div class="game-header">
-                <button class="back-btn" onclick="showMenu()">← Назад</button>
-                <div class="game-name">💎 Mines</div>
-            </div>
+        <div class="multiplier-badges" id="multiplier-history"></div>
 
-            <div class="settings">
-                <div class="setting-item">
-                    <label>Количество мин:</label>
-                    <select id="mines-count">
-                        <option value="3">3 мины</option>
-                        <option value="5" selected>5 мин</option>
-                        <option value="7">7 мин</option>
-                    </select>
+        <div class="game-area">
+            <div class="players-sidebar">
+                <div class="players-header">
+                    <button class="tab active">All</button>
+                    <button class="tab">My</button>
+                    <button class="tab">Top</button>
                 </div>
-            </div>
-
-            <button class="signal-btn" onclick="generateMinesSignal()">⚡ Получить сигнал</button>
-
-            <div class="result-message" id="mines-result"></div>
-
-            <div class="mines-grid" id="mines-grid"></div>
-
-            <div class="info-box">
-                💡 <strong>Как играть:</strong><br>
-                1. Выберите количество мин<br>
-                2. Нажмите "Получить сигнал"<br>
-                3. Зелёные клетки - безопасные<br>
-                4. Красные клетки - мины
-            </div>
-        </div>
-
-        <!-- Tower Rush Game -->
-        <div id="tower-game" class="game-screen">
-            <div class="game-header">
-                <button class="back-btn" onclick="showMenu()">← Назад</button>
-                <div class="game-name">🏰 Tower Rush</div>
-            </div>
-
-            <div class="settings">
-                <div class="setting-item">
-                    <label>Уровень сложности:</label>
-                    <select id="tower-difficulty">
-                        <option value="easy">Легко (10 уровней)</option>
-                        <option value="medium" selected>Средне (15 уровней)</option>
-                        <option value="hard">Сложно (20 уровней)</option>
-                    </select>
+                <div class="round-status">
+                    <div class="status-dot"></div>
+                    <span id="round-status-text">Pre-round</span>
                 </div>
+                <div class="total-bets" id="total-bets">Total bets: 216</div>
+                <div id="players-list"></div>
             </div>
 
-            <button class="signal-btn" onclick="generateTowerSignal()">⚡ Получить сигнал</button>
+            <div class="game-canvas">
+                <div class="stars" id="stars"></div>
+                <div class="clouds">
+                    <div class="cloud"></div>
+                    <div class="cloud"></div>
+                    <div class="cloud"></div>
+                </div>
 
-            <div class="result-message" id="tower-result"></div>
+                <div class="character" id="character">
+                    <div class="lucky-joe">
+                        <div class="flame" id="flame"></div>
+                        <img src="https://i.ibb.co/WpkJzf4G/540cf5ce5915edb612d16fe82eedf489.jpg" alt="Lucky Joe" style="
+                            width: 100%;
+                            height: 100%;
+                            object-fit: contain;
+                            filter: drop-shadow(0 10px 30px rgba(124, 58, 237, 0.8));
+                        ">
+                    </div>
+                </div>
 
-            <div class="tower-container" id="tower-container"></div>
+                <div class="graph-line">
+                    <div class="line" id="graph-line"></div>
+                </div>
 
-            <div class="info-box">
-                💡 <strong>Как играть:</strong><br>
-                1. Выберите сложность<br>
-                2. Нажмите "Получить сигнал"<br>
-                3. Зелёные блоки - безопасный путь<br>
-                4. Стройте башню снизу вверх
-            </div>
-        </div>
-
-        <!-- Aviamasters Game -->
-        <div id="avia-game" class="game-screen">
-            <div class="game-header">
-                <button class="back-btn" onclick="showMenu()">← Назад</button>
-                <div class="game-name">✈️ Aviamasters</div>
-            </div>
-
-            <button class="signal-btn" onclick="generateAviaSignal()">⚡ Получить сигнал</button>
-
-            <div class="result-message" id="avia-result"></div>
-
-            <div class="avia-display">
-                <div class="avia-multiplier" id="avia-multiplier">1.00x</div>
-                <div class="avia-status" id="avia-status">Ожидание сигнала...</div>
-                <div class="avia-plane">✈️</div>
-            </div>
-
-            <div class="info-box">
-                💡 <strong>Как играть:</strong><br>
-                1. Нажмите "Получить сигнал"<br>
-                2. Получите рекомендуемый множитель<br>
-                3. Самолёт покажет полёт<br>
-                4. Выводите до указанного множителя
+                <div class="multiplier-display" id="multiplier">x1.00</div>
+                <div class="status-text" id="status"></div>
             </div>
         </div>
 
-        <!-- Lucky Jet Game -->
-        <div id="jet-game" class="game-screen">
-            <div class="game-header">
-                <button class="back-btn" onclick="showMenu()">← Назад</button>
-                <div class="game-name">🚀 Lucky Jet</div>
+        <div class="control-panel">
+            <div class="bet-controls">
+                <div class="bet-header">
+                    <button class="bet-option active">Autobet</button>
+                    <button class="bet-option">Autowithdrawal</button>
+                </div>
+                <div class="bet-input-group">
+                    <button class="bet-decrease" onclick="decreaseBet()">−</button>
+                    <input type="number" class="bet-input" id="bet-amount" value="0.2">
+                    <button class="bet-increase" onclick="increaseBet()">+</button>
+                </div>
+                <div class="quick-amounts">
+                    <button class="quick-amount" onclick="setBet(5)">5</button>
+                    <button class="quick-amount" onclick="setBet(25)">25</button>
+                    <button class="quick-amount" onclick="setBet(50)">50</button>
+                    <button class="quick-amount" onclick="setBet(100)">100</button>
+                </div>
+                <button class="action-btn bet-btn" id="action-btn" onclick="handleAction()">BET</button>
             </div>
 
-            <button class="signal-btn" onclick="generateJetSignal()">⚡ Получить сигнал</button>
-
-            <div class="result-message" id="jet-result"></div>
-
-            <div class="jet-display">
-                <div class="jet-multiplier" id="jet-multiplier">1.00x</div>
-                <div class="jet-character">🚀</div>
-                <div class="jet-trail"></div>
-            </div>
-
-            <div class="info-box">
-                💡 <strong>Как играть:</strong><br>
-                1. Нажмите "Получить сигнал"<br>
-                2. Получите целевой множитель<br>
-                3. Джет полетит вверх<br>
-                4. Выводите на рекомендуемом множителе
+            <div class="bet-controls">
+                <div class="bet-header">
+                    <button class="bet-option active">Autobet</button>
+                    <button class="bet-option">Autowithdrawal</button>
+                </div>
+                <div class="bet-input-group">
+                    <button class="bet-decrease" onclick="decreaseBet2()">−</button>
+                    <input type="number" class="bet-input" id="bet-amount-2" value="0.2">
+                    <button class="bet-increase" onclick="increaseBet2()">+</button>
+                </div>
+                <div class="quick-amounts">
+                    <button class="quick-amount" onclick="setBet2(5)">5</button>
+                    <button class="quick-amount" onclick="setBet2(25)">25</button>
+                    <button class="quick-amount" onclick="setBet2(50)">50</button>
+                    <button class="quick-amount" onclick="setBet2(100)">100</button>
+                </div>
+                <button class="action-btn bet-btn" id="action-btn-2" onclick="handleAction2()">BET</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Telegram Web App
-        let tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
-
-        // Показать меню
-        function showMenu() {
-            document.querySelectorAll('.game-screen').forEach(screen => {
-                screen.style.display = 'none';
-            });
-            document.getElementById('menu').style.display = 'flex';
+        let tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.expand();
+            tg.ready();
         }
 
-        // Показать игру
-        function showGame(game) {
-            document.getElementById('menu').style.display = 'none';
-            document.querySelectorAll('.game-screen').forEach(screen => {
-                screen.style.display = 'none';
-            });
-            document.getElementById(`${game}-game`).style.display = 'block';
-            
-            // Инициализация игры
-            if (game === 'mines') initMinesGrid();
-            if (game === 'tower') initTowerGrid();
+        let soundEnabled = true;
+        let gameState = 'waiting';
+        let currentMultiplier = 1.00;
+        let betPlaced = false;
+        let betPlaced2 = false;
+        let animationFrame;
+        let startTime;
+        let multiplierHistory = [2.18, 1.46, 3.85, 1.18, 1.27, 34.17, 1.80];
+
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 150; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
         }
 
-        // ========== MINES GAME ==========
-        function initMinesGrid() {
-            const grid = document.getElementById('mines-grid');
-            grid.innerHTML = '';
-            for (let i = 0; i < 25; i++) {
-                const cell = document.createElement('div');
-                cell.className = 'mine-cell';
-                cell.innerHTML = '❓';
-                grid.appendChild(cell);
-            }
-        }
+        const playerNames = ['27374a', 'c300rt', 'krycap', 'Dasha', 'Myxa'];
+        const colors = ['#ef4444', '#f59e0b', '#10b981', '#3b82f6', '#8b5cf6'];
 
-        function generateMinesSignal() {
-            const minesCount = parseInt(document.getElementById('mines-count').value);
-            const cells = document.querySelectorAll('.mine-cell');
-            
-            // Сброс
-            cells.forEach(cell => {
-                cell.className = 'mine-cell';
-                cell.innerHTML = '❓';
-            });
-
-            // Генерация мин
-            const minePositions = new Set();
-            while (minePositions.size < minesCount) {
-                minePositions.add(Math.floor(Math.random() * 25));
-            }
-
-            // Анимация раскрытия
-            let delay = 0;
-            cells.forEach((cell, index) => {
-                setTimeout(() => {
-                    if (minePositions.has(index)) {
-                        cell.classList.add('danger');
-                        cell.innerHTML = '💣';
-                    } else {
-                        cell.classList.add('safe');
-                        cell.innerHTML = '💎';
-                    }
-                }, delay);
-                delay += 50;
-            });
-
-            document.getElementById('mines-result').innerHTML = `
-                ✅ Сигнал получен!<br>
-                Безопасных клеток: ${25 - minesCount}
-            `;
-
-            // Отправка данных в бота
-            tg.sendData(JSON.stringify({
-                game: 'mines',
-                mines: minesCount,
-                safe_cells: 25 - minesCount
-            }));
-        }
-
-        // ========== TOWER GAME ==========
-        function initTowerGrid() {
-            const container = document.getElementById('tower-container');
-            container.innerHTML = '';
-            
-            const difficulty = document.getElementById('tower-difficulty').value;
-            const levels = difficulty === 'easy' ? 10 : difficulty === 'medium' ? 15 : 20;
-            
-            for (let i = 0; i < levels; i++) {
-                const level = document.createElement('div');
-                level.className = 'tower-level';
-                for (let j = 0; j < 3; j++) {
-                    const block = document.createElement('div');
-                    block.className = 'tower-block';
-                    block.innerHTML = '?';
-                    level.appendChild(block);
-                }
-                container.appendChild(level);
-            }
-        }
-
-        function generateTowerSignal() {
-            const levels = document.querySelectorAll('.tower-level');
-            const path = [];
-            
-            // Сброс
-            document.querySelectorAll('.tower-block').forEach(block => {
-                block.className = 'tower-block';
-                block.innerHTML = '?';
-            });
-
-            // Генерация пути
-            let delay = 0;
-            levels.forEach((level, levelIndex) => {
-                const blocks = level.querySelectorAll('.tower-block');
-                const safeIndex = Math.floor(Math.random() * 3);
-                path.push(safeIndex);
-
-                blocks.forEach((block, blockIndex) => {
-                    setTimeout(() => {
-                        if (blockIndex === safeIndex) {
-                            block.classList.add('safe');
-                            block.innerHTML = '✓';
-                        } else {
-                            block.classList.add('danger');
-                            block.innerHTML = '✗';
-                        }
-                    }, delay);
-                });
-                delay += 150;
-            });
-
-            document.getElementById('tower-result').innerHTML = `
-                ✅ Безопасный путь найден!<br>
-                Следуйте зелёным блокам снизу вверх
-            `;
-
-            tg.sendData(JSON.stringify({
-                game: 'tower',
-                path: path
-            }));
-        }
-
-        // ========== AVIAMASTERS GAME ==========
-        function generateAviaSignal() {
-            const multipliers = [1.5, 1.8, 2.0, 2.3, 2.5, 2.8, 3.0, 3.5, 4.0, 5.0];
-            const targetMultiplier = multipliers[Math.floor(Math.random() * multipliers.length)];
-            
-            const multiplierEl = document.getElementById('avia-multiplier');
-            const statusEl = document.getElementById('avia-status');
-            
-            multiplierEl.textContent = '1.00x';
-            statusEl.textContent = 'Полёт начался...';
-
-            // Анимация роста множителя
-            let current = 1.0;
-            const interval = setInterval(() => {
-                current += 0.1;
-                multiplierEl.textContent = current.toFixed(2) + 'x';
+        function updatePlayersList() {
+            const list = document.getElementById('players-list');
+            let html = '';
+            for (let i = 0; i < 10; i++) {
+                const name = playerNames[Math.floor(Math.random() * playerNames.length)];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const bet = (Math.random() * 50 + 5).toFixed(2);
+                const mult = gameState === 'flying' ? currentMultiplier.toFixed(2) : (Math.random() * 3 + 1).toFixed(2);
+                const status = gameState === 'crashed' && Math.random() > 0.5 ? 'win' : 'current';
                 
-                if (current >= targetMultiplier) {
-                    clearInterval(interval);
-                    multiplierEl.textContent = targetMultiplier.toFixed(2) + 'x';
-                    statusEl.textContent = '✅ Целевой множитель достигнут!';
-                }
-            }, 100);
-
-            document.getElementById('avia-result').innerHTML = `
-                🎯 Рекомендуемый вывод: <strong>${targetMultiplier.toFixed(2)}x</strong><br>
-                Выводите до достижения этого множителя!
-            `;
-
-            tg.sendData(JSON.stringify({
-                game: 'aviamasters',
-                target_multiplier: targetMultiplier
-            }));
+                html += `<div class="player-item">
+                    <div class="player-avatar" style="background: ${color}">${name.substring(0, 2).toUpperCase()}</div>
+                    <div class="player-info">
+                        <div class="player-name">${name}</div>
+                        <div class="player-bet">${bet} $</div>
+                    </div>
+                    <div class="player-multiplier ${status}">${mult}x</div>
+                </div>`;
+            }
+            list.innerHTML = html;
         }
 
-        // ========== LUCKY JET GAME ==========
-        function generateJetSignal() {
-            const multipliers = [1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 5.0, 7.0, 10.0];
-            const targetMultiplier = multipliers[Math.floor(Math.random() * multipliers.length)];
+        function updateMultiplierHistory() {
+            const container = document.getElementById('multiplier-history');
+            let html = '';
+            for (let i = 0; i < multiplierHistory.length; i++) {
+                const m = multiplierHistory[i];
+                let className = 'badge-low';
+                if (m >= 2 && m < 10) className = 'badge-medium';
+                if (m >= 10) className = 'badge-high';
+                html += `<div class="multiplier-badge ${className}">${m.toFixed(2)}x</div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function startRound() {
+            gameState = 'flying';
+            currentMultiplier = 1.00;
+            startTime = Date.now();
             
-            const multiplierEl = document.getElementById('jet-multiplier');
+            document.getElementById('status').textContent = '';
+            document.getElementById('multiplier').classList.remove('flew-away');
+            document.getElementById('round-status-text').textContent = 'Round in progress';
+            document.getElementById('flame').style.display = 'block';
             
-            multiplierEl.textContent = '1.00x';
-
-            // Анимация роста множителя
-            let current = 1.0;
-            const interval = setInterval(() => {
-                current += 0.15;
-                multiplierEl.textContent = current.toFixed(2) + 'x';
-                
-                if (current >= targetMultiplier) {
-                    clearInterval(interval);
-                    multiplierEl.textContent = targetMultiplier.toFixed(2) + 'x';
-                }
-            }, 120);
-
-            document.getElementById('jet-result').innerHTML = `
-                🚀 Рекомендуемый вывод: <strong>${targetMultiplier.toFixed(2)}x</strong><br>
-                Следите за ракетой и выводите вовремя!
-            `;
-
-            tg.sendData(JSON.stringify({
-                game: 'luckyjet',
-                target_multiplier: targetMultiplier
-            }));
+            if (betPlaced) {
+                document.getElementById('action-btn').textContent = 'CASHOUT';
+                document.getElementById('action-btn').className = 'action-btn cashout-btn';
+            }
+            
+            updatePlayersList();
+            animateRound();
         }
 
-        // Инициализация при загрузке
-        window.onload = function() {
-            initMinesGrid();
+        function animateRound() {
+            if (gameState !== 'flying') return;
+
+            const elapsed = (Date.now() - startTime) / 1000;
+            currentMultiplier = 1.00 + (elapsed * elapsed * 0.12);
+
+            const character = document.getElementById('character');
+            const progress = Math.min(elapsed / 8, 1);
+            character.style.left = (15 + progress * 65) + '%';
+            character.style.bottom = (15 + progress * 60) + '%';
+
+            const graphLine = document.getElementById('graph-line');
+            const angle = Math.atan(progress * 2.5) * (180 / Math.PI);
+            graphLine.style.width = (progress * 100) + '%';
+            graphLine.style.transform = 'rotate(' + angle + 'deg)';
+
+            document.getElementById('multiplier').textContent = 'x' + currentMultiplier.toFixed(2);
+
+            const crashChance = 0.001 + (elapsed * 0.0001);
+            if (Math.random() < crashChance || currentMultiplier > 100) {
+                crashRound();
+                return;
+            }
+
+            animationFrame = requestAnimationFrame(animateRound);
         }
+
+        function crashRound() {
+            gameState = 'crashed';
+            cancelAnimationFrame(animationFrame);
+
+            document.getElementById('multiplier').classList.add('flew-away');
+            document.getElementById('status').textContent = 'FLEW AWAY';
+            document.getElementById('round-status-text').textContent = 'Round ended';
+            document.getElementById('flame').style.display = 'none';
+
+            multiplierHistory.unshift(currentMultiplier);
+            if (multiplierHistory.length > 20) multiplierHistory.pop();
+            updateMultiplierHistory();
+            updatePlayersList();
+
+            if (betPlaced) {
+                document.getElementById('action-btn').textContent = 'BET';
+                document.getElementById('action-btn').className = 'action-btn bet-btn';
+                betPlaced = false;
+            }
+
+            setTimeout(() => {
+                document.getElementById('character').style.left = '15%';
+                document.getElementById('character').style.bottom = '15%';
+                document.getElementById('graph-line').style.width = '0';
+                document.getElementById('graph-line').style.transform = 'rotate(0deg)';
+            }, 2000);
+
+            setTimeout(() => {
+                gameState = 'waiting';
+                document.getElementById('multiplier').textContent = 'x1.00';
+                document.getElementById('status').textContent = '';
+                document.getElementById('round-status-text').textContent = 'Pre-round';
+                updatePlayersList();
+                setTimeout(startRound, 4000);
+            }, 3000);
+        }
+
+        function handleAction() {
+            if (gameState === 'flying' && betPlaced) {
+                const bet = parseFloat(document.getElementById('bet-amount').value);
+                const win = (bet * currentMultiplier).toFixed(2);
+                document.getElementById('action-btn').textContent = 'WON ' + win + ' $';
+                betPlaced = false;
+            } else if (gameState === 'waiting') {
+                betPlaced = true;
+            }
+        }
+
+        function handleAction2() {
+            if (gameState === 'flying' && betPlaced2) {
+                const bet = parseFloat(document.getElementById('bet-amount-2').value);
+                const win = (bet * currentMultiplier).toFixed(2);
+                document.getElementById('action-btn-2').textContent = 'WON ' + win + ' $';
+                betPlaced2 = false;
+            } else if (gameState === 'waiting') {
+                betPlaced2 = true;
+            }
+        }
+
+        function decreaseBet() {
+            const input = document.getElementById('bet-amount');
+            input.value = Math.max(0.1, parseFloat(input.value) - 0.1).toFixed(1);
+        }
+
+        function increaseBet() {
+            const input = document.getElementById('bet-amount');
+            input.value = (parseFloat(input.value) + 0.1).toFixed(1);
+        }
+
+        function decreaseBet2() {
+            const input = document.getElementById('bet-amount-2');
+            input.value = Math.max(0.1, parseFloat(input.value) - 0.1).toFixed(1);
+        }
+
+        function increaseBet2() {
+            const input = document.getElementById('bet-amount-2');
+            input.value = (parseFloat(input.value) + 0.1).toFixed(1);
+        }
+
+        function setBet(amount) {
+            document.getElementById('bet-amount').value = amount.toFixed(1);
+        }
+
+        function setBet2(amount) {
+            document.getElementById('bet-amount-2').value = amount.toFixed(1);
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('sound-icon').textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        updatePlayersList();
+        updateMultiplierHistory();
+        setTimeout(startRound, 4000);
     </script>
 </body>
 </html>
