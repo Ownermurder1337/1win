@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <title>1WIN Signals Bot</title>
+  <title>Casino Signals</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
 
@@ -10,142 +10,234 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: radial-gradient(circle at top, #0f172a, #020617);
+      background: #0b1220;
       color: #fff;
     }
 
-    header {
+    /* Верхняя панель */
+    .topbar {
+      background: #0f172a;
+      padding: 12px;
       text-align: center;
-      padding: 20px;
-      font-size: 22px;
       font-weight: bold;
-      animation: glow 2s infinite alternate;
+      letter-spacing: 1px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 5px #22c55e; }
-      to { text-shadow: 0 0 15px #22c55e; }
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 16px;
-      padding: 16px;
-    }
-
-    .card {
+    /* Навигация игр */
+    .nav {
+      display: flex;
+      justify-content: space-around;
       background: #020617;
-      border-radius: 16px;
-      padding: 14px;
-      box-shadow: 0 0 20px rgba(34,197,94,0.15);
-      text-align: center;
-      animation: float 3s ease-in-out infinite;
+      padding: 8px 0;
     }
 
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-4px); }
-      100% { transform: translateY(0); }
+    .nav button {
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 13px;
+      cursor: pointer;
     }
 
-    .card img {
+    .nav button.active {
+      color: #22c55e;
+      text-shadow: 0 0 8px #22c55e;
+    }
+
+    /* Общий экран игры */
+    .game {
+      display: none;
+      padding: 16px;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .game.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Кнопка сигнала */
+    .ai-btn {
       width: 100%;
-      max-height: 120px;
-      object-fit: contain;
-      margin-bottom: 10px;
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
-    }
-
-    button {
-      width: 100%;
-      padding: 10px;
-      border-radius: 10px;
+      margin-top: 14px;
+      padding: 12px;
+      border-radius: 12px;
       border: none;
       background: linear-gradient(135deg, #22c55e, #16a34a);
       color: #000;
       font-weight: bold;
+      font-size: 15px;
       cursor: pointer;
-      transition: 0.2s;
+      box-shadow: 0 0 15px rgba(34,197,94,0.4);
     }
 
-    button:hover {
-      box-shadow: 0 0 15px #22c55e;
+    .ai-btn:active {
+      transform: scale(0.96);
     }
 
-    button:active {
-      transform: scale(0.95);
-    }
-
-    .result {
-      margin-top: 8px;
+    .ai-result {
+      margin-top: 12px;
+      background: #020617;
+      border: 1px solid #22c55e;
+      padding: 10px;
+      border-radius: 10px;
       font-size: 14px;
       color: #a7f3d0;
-      min-height: 20px;
-      opacity: 0;
-      transform: translateY(5px);
-      transition: 0.3s;
+      min-height: 40px;
+      animation: glow 1.5s infinite alternate;
     }
 
-    .result.show {
-      opacity: 1;
-      transform: translateY(0);
+    @keyframes glow {
+      from { box-shadow: 0 0 5px #22c55e; }
+      to { box-shadow: 0 0 15px #22c55e; }
+    }
+
+    /* -------- TOWER -------- */
+    .tower-grid {
+      display: grid;
+      grid-template-rows: repeat(6, 50px);
+      gap: 6px;
+      margin: 20px 0;
+    }
+
+    .tower-cell {
+      background: #111827;
+      border-radius: 8px;
+      box-shadow: inset 0 0 5px #000;
+    }
+
+    .tower-cell.safe {
+      background: linear-gradient(135deg, #22c55e, #16a34a);
+      box-shadow: 0 0 12px #22c55e;
+    }
+
+    .tower-cell.danger {
+      background: linear-gradient(135deg, #ef4444, #991b1b);
+    }
+
+    /* -------- AVIATOR / LUCKYJET -------- */
+    .flight {
+      height: 180px;
+      background: linear-gradient(#0ea5e9, #020617);
+      position: relative;
+      overflow: hidden;
+      border-radius: 16px;
+      margin: 20px 0;
+    }
+
+    .plane, .rocket {
+      position: absolute;
+      left: -40px;
+      top: 50%;
+      font-size: 32px;
+      animation: fly 3s linear infinite;
+    }
+
+    @keyframes fly {
+      from { left: -40px; }
+      to { left: 110%; }
+    }
+
+    .coef {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-size: 28px;
+      font-weight: bold;
+      color: #22c55e;
+      text-shadow: 0 0 10px #22c55e;
+    }
+
+    /* -------- MINES -------- */
+    .mines-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin: 20px 0;
+    }
+
+    .mine {
+      height: 40px;
+      background: #111827;
+      border-radius: 6px;
+    }
+
+    .mine.safe {
+      background: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+    }
+
+    .mine.bomb {
+      background: #ef4444;
     }
 
     footer {
       text-align: center;
-      font-size: 12px;
-      opacity: 0.6;
-      padding: 12px;
+      font-size: 11px;
+      opacity: 0.5;
+      padding: 10px;
     }
   </style>
 </head>
 <body>
 
-  <header>🎰 1WIN SIGNALS (80% LUCK)</header>
+  <div class="topbar">CASINO SIGNALS</div>
 
+  <div class="nav">
+    <button class="active" onclick="showGame('tower', this)">Tower</button>
+    <button onclick="showGame('avia', this)">Aviator</button>
+    <button onclick="showGame('mines', this)">Mines</button>
+    <button onclick="showGame('lucky', this)">LuckyJet</button>
+  </div>
+
+  <!-- ЗВУКИ -->
   <audio id="clickSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_2b9e2d3b0a.mp3"></audio>
   <audio id="winSound" src="https://cdn.pixabay.com/audio/2022/08/26/audio_8c84f9d7a7.mp3"></audio>
 
-  <div class="grid">
-
-    <div class="card">
-      <img src="https://i.imgur.com/Vs8Z0mT.png">
-      <h3>Tower Rush</h3>
-      <button onclick="towerSignal()">Получить сигнал</button>
-      <div class="result" id="towerResult"></div>
-    </div>
-
-    <div class="card">
-      <img src="https://i.imgur.com/Fk4rFQZ.png">
-      <h3>Aviamasters</h3>
-      <button onclick="aviaSignal()">Получить сигнал</button>
-      <div class="result" id="aviaResult"></div>
-    </div>
-
-    <div class="card">
-      <img src="https://i.imgur.com/WxK0Q3M.png">
-      <h3>Mines</h3>
-      <button onclick="minesSignal()">Получить сигнал</button>
-      <div class="result" id="minesResult"></div>
-    </div>
-
-    <div class="card">
-      <img src="https://i.imgur.com/3r0pQ7B.png">
-      <h3>LuckyJet</h3>
-      <button onclick="luckySignal()">Получить сигнал</button>
-      <div class="result" id="luckyResult"></div>
-    </div>
-
+  <!-- TOWER -->
+  <div class="game active" id="tower">
+    <h3>Tower Rush</h3>
+    <div class="tower-grid"></div>
+    <button class="ai-btn" onclick="towerSignal()">🧠 Получить сигнал</button>
+    <div class="ai-result" id="towerResult"></div>
   </div>
 
-  <footer>⚠️ Развлекательный контент. Не гарантирует выигрыш.</footer>
+  <!-- AVIATOR -->
+  <div class="game" id="avia">
+    <h3>Aviamasters</h3>
+    <div class="flight">
+      <div class="plane">✈️</div>
+      <div class="coef" id="aviaCoef">1.00x</div>
+    </div>
+    <button class="ai-btn" onclick="aviaSignal()">🧠 Получить сигнал</button>
+    <div class="ai-result" id="aviaResult"></div>
+  </div>
+
+  <!-- MINES -->
+  <div class="game" id="mines">
+    <h3>Mines</h3>
+    <div class="mines-grid"></div>
+    <button class="ai-btn" onclick="minesSignal()">🧠 Получить сигнал</button>
+    <div class="ai-result" id="minesResult"></div>
+  </div>
+
+  <!-- LUCKYJET -->
+  <div class="game" id="lucky">
+    <h3>LuckyJet</h3>
+    <div class="flight">
+      <div class="rocket">🚀</div>
+      <div class="coef" id="luckyCoef">1.00x</div>
+    </div>
+    <button class="ai-btn" onclick="luckySignal()">🧠 Получить сигнал</button>
+    <div class="ai-result" id="luckyResult"></div>
+  </div>
+
+  <footer>Развлекательный симулятор. Не гарантирует выигрыш.</footer>
 
   <script>
     const tg = window.Telegram?.WebApp;
@@ -154,46 +246,106 @@
     const click = document.getElementById("clickSound");
     const win = document.getElementById("winSound");
 
+    function showGame(id, btn) {
+      document.querySelectorAll(".game").forEach(g => g.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+
+      document.querySelectorAll(".nav button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      click.play();
+    }
+
     function luck80() {
       return Math.random() < 0.8;
     }
 
-    function showResult(id, text, success) {
-      click.play();
-      if (success) win.play();
+    /* -------- TOWER -------- */
+    function renderTower(level) {
+      const grid = document.querySelector(".tower-grid");
+      grid.innerHTML = "";
 
-      const el = document.getElementById(id);
-      el.innerText = text;
-      el.classList.add("show");
+      for (let i = 6; i >= 1; i--) {
+        const cell = document.createElement("div");
+        cell.className = "tower-cell";
 
-      setTimeout(() => {
-        el.classList.remove("show");
-      }, 3000);
+        if (i === level) cell.classList.add("safe");
+        if (i < level) cell.classList.add("danger");
+
+        grid.appendChild(cell);
+      }
     }
 
     function towerSignal() {
-      const floor = Math.floor(Math.random() * 5) + 2;
       const ok = luck80();
-      showResult("towerResult", `Этаж: ${floor} | ${ok ? "✅ Безопасно" : "⚠️ Риск"}`, ok);
+      const level = ok ? 3 : 1;
+
+      renderTower(level);
+
+      document.getElementById("towerResult").innerText =
+        ok ? "ИИ: Безопасный уровень найден" : "ИИ: Лучше пропустить раунд";
+
+      click.play();
+      if (ok) win.play();
     }
 
+    /* -------- AVIATOR -------- */
     function aviaSignal() {
-      const coef = (Math.random() * 3 + 1.5).toFixed(2);
       const ok = luck80();
-      showResult("aviaResult", `Коэф: ${coef}x | ${ok ? "🚀 Вылетай" : "⏳ Жди"}`, ok);
+      const coef = ok ? (Math.random() * 2 + 2).toFixed(2) : (Math.random() + 1.2).toFixed(2);
+
+      document.getElementById("aviaCoef").innerText = coef + "x";
+      document.getElementById("aviaResult").innerText =
+        ok ? "ИИ: Вылетай сейчас" : "ИИ: Подожди следующий раунд";
+
+      click.play();
+      if (ok) win.play();
+    }
+
+    /* -------- MINES -------- */
+    function renderMines(safe = [6, 12, 18]) {
+      const grid = document.querySelector(".mines-grid");
+      grid.innerHTML = "";
+
+      for (let i = 0; i < 25; i++) {
+        const cell = document.createElement("div");
+        cell.className = "mine";
+
+        if (safe.includes(i)) cell.classList.add("safe");
+
+        grid.appendChild(cell);
+      }
     }
 
     function minesSignal() {
-      const bombs = Math.floor(Math.random() * 3) + 3;
       const ok = luck80();
-      showResult("minesResult", `Бомб: ${bombs} | ${ok ? "🟩🟩🟩" : "🟥🟩🟥"}`, ok);
+      const safeCells = ok ? [6, 12, 18] : [2, 7];
+
+      renderMines(safeCells);
+
+      document.getElementById("minesResult").innerText =
+        ok ? "ИИ: Безопасные клетки отмечены" : "ИИ: Высокий риск";
+
+      click.play();
+      if (ok) win.play();
     }
 
+    /* -------- LUCKYJET -------- */
     function luckySignal() {
-      const x = (Math.random() * 5 + 1.2).toFixed(2);
       const ok = luck80();
-      showResult("luckyResult", `Коэф: ${x}x | ${ok ? "💰 Забирай" : "⛔ Рано"}`, ok);
+      const coef = ok ? (Math.random() * 3 + 2).toFixed(2) : (Math.random() + 1.2).toFixed(2);
+
+      document.getElementById("luckyCoef").innerText = coef + "x";
+      document.getElementById("luckyResult").innerText =
+        ok ? "ИИ: Забирай сейчас" : "ИИ: Рано";
+
+      click.play();
+      if (ok) win.play();
     }
+
+    // Начальные рендеры
+    renderTower(2);
+    renderMines();
   </script>
 
 </body>
